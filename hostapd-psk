@@ -1,0 +1,5 @@
+# In this file you will put your WPA passphrase, generated with the command: 
+#   wpa_passphrase "<your_password>" "<your_ssid>"
+# and then saved at /etc/hostapd/hosapd-psk
+
+00:00:00:00:00:00 <your passphrase here>

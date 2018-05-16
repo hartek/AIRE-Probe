@@ -1,0 +1,6 @@
+# This is the configuration file for the wireless interface (in my case wlan1), located at /etc/network/interfaces. 
+# Add or edit the following lines into your file. 
+
+iface wlan1 inet static
+address 11.0.0.1
+netmask 255.255.255.0

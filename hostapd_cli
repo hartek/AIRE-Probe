@@ -1,0 +1,57 @@
+# Init script that will initiate hostapd_cli when system boots up, located at /etc/init.d/hostapd.cli.
+# This will need execution permissions. Also, it needs to start with the #!/bin/sh lines, so you might want
+# to delete these initial comment lines. 
+
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides: hostapd_cli
+# Required-Start: $remote_fs hostapd
+# Required-Stop: $remote_fs
+# Should-Start:
+# Should-Stop:
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Enables the sniffer on probe access point
+# Description:
+### END INIT INFO
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON_SBIN=/usr/sbin/hostapd_cli
+NAME=hostapd_cli
+DESC="hostapd cli"
+PIDFILE=/var/run/hostapd_cli.pid
+
+[ -x "$DAEMON_SBIN" ] || exit 0
+DAEMON_OPTS="-B -a /etc/hostapd/sniffer.sh"
+. /lib/lsb/init-functions
+
+case "$1" in
+  start)
+    log_daemon_msg "Starting $DESC" "$NAME"
+    start-stop-daemon --start --oknodo --quiet --exec "$DAEMON_SBIN" \
+      -- $DAEMON_OPTS >/dev/null
+    log_end_msg "$?"
+    ;;
+  stop)
+    log_daemon_msg "Stopping $DESC" "$NAME"
+    start-stop-daemon --stop --oknodo --quiet --exec "$DAEMON_SBIN"
+    log_end_msg "$?"
+    ;;
+  restart|force-reload)
+    $0 stop
+    sleep 4
+    $0 start
+    ;;
+  status)
+    status_of_proc "$DAEMON_SBIN" "$NAME"
+    exit $?
+    ;;
+
+  *)
+    N=/etc/init.d/$NAME
+    echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+    exit 1
+    ;;
+esac
+exit 0
